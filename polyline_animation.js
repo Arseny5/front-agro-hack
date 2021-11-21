@@ -7,6 +7,8 @@ function init(ymaps) {
     // Создаем карту.
     var myPlacemark, myMap = new ymaps.Map("map", {
 
+
+
         center: [53.21268092272585, 26.97198642737419],
         zoom: 16, color: "#f652a0",
         type: 'yandex#satellite',
@@ -14,51 +16,124 @@ function init(ymaps) {
     });
 
     $(document).ready(function () {
-        let arr1 = [
-            [53.21268092272585, 26.97198642737419], [53.212536266413544, 26.972278886898152], [53.212399149443236, 26.972546165405287], [53.21206373341792, 26.97316975530047], [53.21185412399693, 26.97355160743415], [53.2114577374993, 26.974238869329014], [53.21150351601854, 26.974302541328694], [53.2115644821588, 26.97442970546365], [53.21163686587346, 26.97460795108988], [53.21166734885956, 26.974716229462217], [53.21169018415648, 26.97481155759733], [53.21167111883866, 26.97491983596967], [53.211598735181866, 26.97507254085026], [53.211533999099515, 26.97514250810415], [53.21149199060771, 26.975250786476487], [53.21143867207804, 26.975307983357556], [53.21137005803414, 26.975333524103192], [53.21135487029528, 26.97540978661128], [53.21138147576335, 26.975524360237827], [53.21144631979042, 26.975734441863896], [53.21154541678503, 26.975957113998376], [53.211606382865675, 26.976090753251945], [53.2116826442013, 26.976186261251463], [53.21173219245396, 26.976211622132695], [53.21178163293592, 26.976192736370074], [53.2118540162837, 26.97618644111587], [53.21193027717856, 26.976135539489007], [53.21204456055357, 26.976135539489007], [53.2121474261017, 26.97606557223512], [53.212208499038034, 26.97600190023544], [53.21226558653648, 26.975950998608575], [53.21233032151344, 26.97590009698171], [53.21242564655105, 26.975887326608895], [53.21268092272585, 26.975791998473778], [53.21334786494614, 26.975582096712117], [53.21345072736508, 26.97553749033946], [53.21350415109988, 26.97549935908541], [53.21353463275743, 26.975448457458548], [53.213549819723596, 26.97521931020546], [53.21353075523329, 26.97511750695173], [53.213542172386695, 26.97496480207114], [53.21351933807686, 26.974793031563525], [53.21349650375483, 26.974665687564162], [53.21345460489646, 26.974417474684053], [53.21337834671488, 26.974258474549252], [53.213363051978504, 26.974182032176753], [53.213321152989614, 26.97403562255037], [53.21327548412216, 26.973895688042596], [53.213199225621736, 26.97338649190955], [53.21310777986812, 26.97308108214837], [53.213069650485615, 26.972941147640594], [53.21303152106918, 26.972832869268252], [53.21299339161882, 26.97262278764219], [53.21295536984497, 26.972520984388463], [53.21291724032683, 26.972431951507556], [53.212875340901945, 26.972323852999622], [53.212860045986005, 26.972202804254465], [53.212860045986005, 26.972164673000414], [53.212783786746115, 26.97176375523971], [53.21268092272585, 26.97198642737419]
-        ];
-        let arr2 = [
-            [53.212734163138784, 26.972068548202515], [53.212708463465205, 26.972090005874634], [53.211513411618384, 26.97418212890625], [53.2118765285956, 26.97489559650421], [53.21206927951451, 26.97590410709381], [53.21224275460009, 26.975737810134888], [53.21186367850352, 26.973801255226135], [53.21201787935427, 26.973522305488586], [53.21239374160283, 26.97567880153656], [53.21258006525574, 26.975598335266113], [53.21216565464877, 26.973291635513306], [53.21231654153294, 26.973023414611816], [53.21277913753046, 26.975523233413696], [53.21306825749246, 26.97542667388916], [53.21252545323452, 26.97266936302185], [53.212657164461284, 26.9723904132843], [53.2132288788505, 26.975351572036743], [53.21343447331009, 26.975297927856445], [53.212734163138784, 26.972068548202515]
-        ];
-       
-        $(".button_main").click(function()  {
+
+        $(".button_main").click(function () {
             let id = $(this).attr("id");
 
             // console.log(id);
             // console.log($(this))
-            if (id == "button1") {
 
+            if (id == "button1") {
                 let field_name;
-                field_name = $('#text_poly').html();
+                field_name = $(this).find("#text_poly").html();
                 console.log(field_name);
-                $.get("http://dan.itatm.keenetic.pro/fields?field_name=&data=" + field_name, function (data, status) {
-                    // $('#text2').text(data.score + '%');
-                    var ret = data;
-                    console.log(data);
-                    // console.log(data);
+                let data_from_back;
+                $.get("http://20.120.103.10:9999/fields?field_name=" + field_name, function (data, status) {
+                    data_from_back = data;
+                    console.log(data_from_back);
+                    myMap.setCenter([53.212734163138784, 26.972068548202515], 16);
+                    perimetr_map(data_from_back.arr);
+                }, "json");
+            }
+
+            else if (id == "button2") {
+                let field_name;
+                field_name = $(this).find("#text_poly").html();
+                console.log(field_name);
+                let data_from_back;
+                $.get("http://20.120.103.10:9999/fields?field_name=" + field_name, function (data, status) {
+                    data_from_back = data;
+                    console.log(data_from_back);
+                    myMap.setCenter([53.2605025616762, 27.375474125146866], 15);
+                    perimetr_map(data_from_back.arr);
                 }, "json");
 
+            }
 
-                myMap.setCenter([53.212734163138784, 26.972068548202515], 16);
-                $("#button_build").click(function()  {
-                    first_map(arr1, arr2);
-                })
-            }
-            else if (id == "button2") {
-                myMap.setCenter([53.2605025616762, 27.375474125146866], 15);
-            }
             else if (id == "button3") {
-                myMap.setCenter([59.18315110901265, 37.85521745681763], 15);
+                let field_name;
+                field_name = $(this).find("#text_poly").html();
+                console.log(field_name);
+                let data_from_back;
+                $.get("http://20.120.103.10:9999/fields?field_name=" + field_name, function (data, status) {
+                    data_from_back = data;
+                    console.log(data);
+                    myMap.setCenter([59.18315110901265, 37.85521745681763], 15);
+                    perimetr_map(data_from_back.arr);
+                }, "json");
+
             }
+
             else if (id == "button4") {
-                myMap.setCenter([55.837689974599186, 37.55972921848297], 17);
+
+                let field_name;
+                field_name = $(this).find("#text_poly").html();
+                console.log(field_name);
+                let data_from_back;
+                $.get("http://20.120.103.10:9999/fields?field_name=" + field_name, function (data, status) {
+                    data_from_back = data;
+                    console.log(data);
+                    myMap.setCenter([55.837689974599186, 37.55972921848297], 17);
+                    perimetr_map(data_from_back.arr);
+                }, "json");
+
             }
         })
     })
 
 
+    function perimetr_map(arr_per) {
+        // var myGeoObject = new ymaps.GeoObject({
+        //     // Описываем геометрию геообъекта.
+        //     geometry: {
+        //         // Тип геометрии - "Ломаная линия".
+        //         type: "LineString",
+        //         // Указываем координаты вершин ломаной.
+        //         coordinates: app_per
+        //     },
+        //     // Описываем свойства геообъекта.
+        //     properties: {
+        //         // Содержимое хинта.
+        //         hintContent: "Я геообъект",
+        //         // Содержимое балуна.
+        //         balloonContent: "Меня можно перетащить"
+        //     }
+        // }, {
+        //     // Задаем опции геообъекта.
+        //     // Включаем возможность перетаскивания ломаной.
+        //     draggable: true,
+        //     // Цвет линии.
+        //     strokeColor: "#FFFF00",
+        //     // Ширина линии.
+        //     strokeWidth: 5
+        // });
 
-    function first_map(arr1, arr2){
+        // Создаем ломаную с помощью вспомогательного класса Polyline.
+        var myPolyline = new ymaps.Polyline(arr_per, {
+            // Описываем свойства геообъекта.
+            // Содержимое балуна.
+            balloonContent: "Ломаная линия"
+        }, {
+            // Задаем опции геообъекта.
+            // Отключаем кнопку закрытия балуна.
+            balloonCloseButton: false,
+            // Цвет линии.
+            strokeColor: "#000000",
+            // Ширина линии.
+            strokeWidth: 4,
+            // Коэффициент прозрачности.
+            strokeOpacity: 0.5
+        });
+
+        // Добавляем линии на карту.
+        myMap.geoObjects
+            // .add(myGeoObject)
+            .add(myPolyline);
+    }
+
+
+
+    function first_map(arr1, arr2) {
         var firstAnimatedLine = new ymaps.AnimatedLine(arr1, {}, {
             // Задаем цвет.
             strokeColor: "#ED4543",
@@ -119,8 +194,8 @@ function init(ymaps) {
         // Запускаем анимацию пути.
         playAnimation();
     }
-    
-    
+
+
 
 
     // Создадим собственный макет выпадающего списка.
@@ -476,7 +551,7 @@ function init(ymaps) {
 
 
 $(document).ready(function () {
-    $(".my").change(function() {
+    $(".my").change(function () {
         if ($(this).val() != '') $(this).prev().text('Выбрано файлов: ' + $(this)[0].files.length);
         else $(this).prev().text('Выберите файлы');
     });
@@ -484,35 +559,26 @@ $(document).ready(function () {
 
 
 
+
+
 // ПОЛЗУНКИ
 function fun1() {
-  var rng1=document.getElementById('r1'); //rng - это Input
-  var p1=document.getElementById('one'); // p - абзац
-  p1.innerHTML=rng1.value;
+    var rng1 = document.getElementById('r1'); //rng - это Input
+    var p1 = document.getElementById('one'); // p - абзац
+    p1.innerHTML = rng1.value;
 }
 function fun2() {
-    var rng2=document.getElementById('r2'); //rng - это Input
-    var p2=document.getElementById('two'); // p - абзац
-    p2.innerHTML=rng2.value;
-  }
-  function fun3() {
-    var rng3=document.getElementById('r3'); //rng - это Input
-    var p3=document.getElementById('three'); // p - абзац
-    p3.innerHTML=rng3.value;
-  }
-  function fun4() {
-    var rng4=document.getElementById('r4'); //rng - это Input
-    var p4=document.getElementById('four'); // p - абзац
-    p4.innerHTML=rng4.value;
-  }
-
-
-//   УДАЛЕНИЕ НЕНУЖНЫХ ЧАСТЕЙ ЯНДЕКС КАРТЫ
-  myMap.controls.remove('fullscreenControl');
-  myMap.controls.remove('rulerControl');
-  myMap.controls.remove('routeButton');
-  myMap.controls.remove('geolocationControl');
-  myMap.controls.remove('searchControl');
-  myMap.controls.remove('trafficControl');
-  myMap.controls.remove('button');
-  myMap.controls.remove('listBox');
+    var rng2 = document.getElementById('r2'); //rng - это Input
+    var p2 = document.getElementById('two'); // p - абзац
+    p2.innerHTML = rng2.value;
+}
+function fun3() {
+    var rng3 = document.getElementById('r3'); //rng - это Input
+    var p3 = document.getElementById('three'); // p - абзац
+    p3.innerHTML = rng3.value;
+}
+function fun4() {
+    var rng4 = document.getElementById('r4'); //rng - это Input
+    var p4 = document.getElementById('four'); // p - абзац
+    p4.innerHTML = rng4.value;
+}
